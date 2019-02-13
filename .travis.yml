@@ -13,7 +13,7 @@ before_install:
   - sudo apt install --only-upgrade docker-ce -y
 script:
   - source docker_info
-  - sudo docker build -t $REPO:$COMMIT .
+  - sudo docker build --build-arg GITHUB_PAT=${GITHUB_PAT} -t $REPO:$COMMIT .
   - docker tag $REPO:$COMMIT $REPO:v$VERSION
 
 after_success:
