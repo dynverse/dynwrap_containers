@@ -2,6 +2,8 @@ FROM rocker/tidyverse:3.5
 
 MAINTAINER Robrecht Cannoodt "rcannood@gmail.com"
 
+ARG GITHUB_PAT
+
 # install hdf5
 RUN apt-get update && apt-get install -y libhdf5-dev libssh-dev
 
