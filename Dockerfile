@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y libhdf5-dev libssh-dev
 
 # install common packages
 RUN echo 'utils::setRepositories(ind=1:4)' > ~/.Rprofile
-RUN R -e 'install.packages(c("Rcpp", "RcppEigen", "RSpectra", "RcppArmadillo"), repos = "https://cloud.r-project.org/", quiet = TRUE)' && \
+RUN R -e 'install.packages(c("Rcpp", "RcppEigen", "RSpectra", "RcppArmadillo"), repos = "https://cloud.r-project.org/", verbose = TRUE, quiet = TRUE)' && \
   R -e 'devtools::install_github("dynverse/dyndimred", dependencies = TRUE)' && \
   R -e 'devtools::install_github("dynverse/dynwrap", dependencies = TRUE)' && \
   rm -rf /tmp/*
