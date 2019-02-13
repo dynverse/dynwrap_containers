@@ -8,12 +8,12 @@ env:
     - COMMIT=${TRAVIS_COMMIT::8}
 
 before_install:
-	- sudo apt update -y
-	- sudo apt install --only-upgrade docker-ce -y
+  - sudo apt update -y
+  - sudo apt install --only-upgrade docker-ce -y
 script:
-	- source docker_info
-	- sudo docker build -t $REPO:$COMMIT .
-	- docker tag $REPO:$COMMIT $REPO:v$VERSION
+  - source docker_info
+  - sudo docker build -t $REPO:$COMMIT .
+  - docker tag $REPO:$COMMIT $REPO:v$VERSION
 
 after_success:
-	- if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ; docker push $REPO ; fi
+  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ; docker push $REPO ; fi
