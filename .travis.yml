@@ -1,20 +1,17 @@
 sudo: required
 services:
 - docker
-env:
-  global:
-    - secure: ggl0VW7P/X+YHeY5dCm3xFgfBsU+VQQn6C8jcjJLMBYz/KjObwAQMZQtmlRiegl0cMO1DvL8rvD9dvzooSc/RNm/ySXW9cwppLiM9lUaQb9NLJC6hSkOQ8+ZvlIGOGnb9aSrwnI+Hq0vxBHWESVeE3yHeft6grZed/JAp9q2igZBoWSddZZoLUtMMACE46qRPmKdxTrF/3rI3LzWO0RWPN/QIts4gba8qJO2OaNQGqnp++0NELx1xa/YlRuS9Y0Kh0+Q18y7MTyxlpss5vldf3t+YS0WgTnpvyFhso4vyYzYvqqOa6+mUVP3MA3rdKjO4utOzUASmazqnfvD9S9uibZCjk2dd1hUGbnvRwebGG9xEfdSda+RFbqQn3yV6q52AqxLFrOeAdRk8oH2yXNbORsu7T1WP267gV6hzTTS1GYVY1tk0dKQ+3zq7TQQI1sSIJlZZA6RBvvqMokGyDuly1w4JWkV/e4Q7zovUSmU27eSOEeyx7EBtpXGKUq1HjVWJN5UDDziTl1kp329O396Fwr+6UcfdIrnd/MGXNexYC9mENSoLmPNF23pn2W7idDFFOU9otWSwiHZh0k7KTjmx9I/cLgrp6g7czLUuMC57qGLw+IEB4UMktEU5bRmShgmT4fhx+tJxIBPBkg9vjbywaMtFyI1RgtQEminZdZfpkc= # DOCKER_USERNAME
-    - secure: "Fz2QzrvmTFUFwXQYuxU0eVuwAVuESWSYpy1dM/HF5evZwr4B80P6g+xPIcwmoZe8yvFZEDlebu1y/5Ptx0v/1uFrpZrKsvGPHFXwW6jJYrObBmtRsZllDRPw8VbgIOP7HGwazJonm7F7l7gGmsvzeD055baOhDlFO2FZ2fASDUD8NGwSgMd1zXdZFAH0PssyT4K9EtsprUAMToaypSixljPUGPRaGTGgp64lZJiPrBjBKcKPcuNQGkmbfigQ6FwHZAUHwrZwuS9aBC4yydPJs34hw1PkImi/D4gk+esbdswcxzdcFDG0kKtT3uXV2HFxmKwXXOUG8iNli/sW3p85jwnCRPGxyTX7njkx5whX6ZKwRz+9j66SB2e6xbyzwbePBvPjde5Scg860tEr9pet4JBrBsAFpS2MxJ42KlEf6v3CsQbr8U9OzF1y5MiCAjpwfxOy+Lw+Pajvc7ksn0hGAWcQkzQo5UVLCwFuFwrnOCvY+yW9jPRenkpzh/9cSt2v65ZAhUak/Bk5T9Scb7pyNedXam6YL5Zr6XWFTIiGSL4iETUfmCzHaTUsuVvXLRZ8z95+OWfPKEhIEaSil5lQrp5HUVpn2t8dg+MvI/eUrwpdACBZ+wxabb/M46KPq6Yb4wMwn2HsYE6gHqHCDpstsfVGoRDHeI4jp1TbTZQerDI=" # DOCKER_PASSWORD
-    - secure: "dHzJyp+kiLqD8i6WiGXzvKnY/y2wVcWopHAOgXxfXcHte4P6PVfyypQW3VEqBSePKMvEGpBk5UWnuoxb0ULOqwZwLThrq64fc2KP2BbHbaHf6m0/8upjHr4OedN3Z29A9MoRpdfmoEB6Y1P6fI6uzI/tys9CUmvRVwB0aLcwWdNmzbwpFYv5/eIuAhuEkRLPE9qCPhaDOz8TrJLaqX8HvH9VcdtNbrhKFMpEgm59ZdKQZEalZlbw1uLZbhk0r2xtaBrV4HfhCqJ+8ySnfxJNXmXj++tz4BndSvnYYwMISqeXK//XCdMmZ6VrXCTwa7dEznpbd88WGB6eNgrPTqzqJSywkdTrc+bQnXyGEamS57qFBEoKk1sKcaXJ7GzMycclU8UCoVS9Y12F1qZ6XZOyqRsgKeNW5ZvR5m7CmN3yVSAwe3nnRCUPM663cie2l8dJcg0397AmQWzXmRbu0cp61j+59SOIy6bKEtKvvUrzwdWkScSeT8PtxeKraZsNZCe5Qg2MjAo/ATzkrFx6Drya4DYS2o1HBm+9p9VXgAnsux//TmTO2LAHm0vAesk5wHqy90SmfOZa23RsE4S8l0iBLQ0RflKLmc9VE9RomCodPZpS33xwqKTHDwOelKna3MEm397bU14FxZFuAIM9geXv1Ca75ZV5/NdIvZ+s4SXDcTU=" # GITHUB_PAT
-    - COMMIT=${TRAVIS_COMMIT::8}
-
 before_install:
-  - sudo apt update -y
-  - sudo apt install --only-upgrade docker-ce -y
+- openssl aes-256-cbc -K $encrypted_95b2b80a4aa4_key -iv $encrypted_95b2b80a4aa4_iv
+  -in credentials.enc -out credentials -d
+- source credentials
+- sudo apt update -y
+- sudo apt install --only-upgrade docker-ce -y
 script:
-  - source docker_info
-  - sudo docker build --build-arg GITHUB_PAT=${GITHUB_PAT} -t $TRAVIS_REPO_SLUG:v$VERSION .
-  - docker tag $TRAVIS_REPO_SLUG:v$VERSION $TRAVIS_REPO_SLUG:latest
-
+- source docker_info
+- sudo docker build --build-arg GITHUB_PAT=${GITHUB_PAT} -t $TRAVIS_REPO_SLUG:v$VERSION
+  .
+- docker tag $TRAVIS_REPO_SLUG:v$VERSION $TRAVIS_REPO_SLUG:latest
 after_success:
-  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ; docker push $TRAVIS_REPO_SLUG ; fi
+- if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker login -u $DOCKER_USERNAME -p
+  $DOCKER_PASSWORD ; docker push $TRAVIS_REPO_SLUG ; fi
