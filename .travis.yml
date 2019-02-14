@@ -9,8 +9,7 @@ before_install:
 - sudo apt install --only-upgrade docker-ce -y
 script:
 - source docker_info
-- sudo docker build --build-arg GITHUB_PAT=${GITHUB_PAT} -t $TRAVIS_REPO_SLUG:v$VERSION
-  .
+- sudo docker build --build-arg GITHUB_PAT=${GITHUB_PAT} -t $TRAVIS_REPO_SLUG:v$VERSION .
 - docker tag $TRAVIS_REPO_SLUG:v$VERSION $TRAVIS_REPO_SLUG:latest
 after_success:
 - if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker login -u $DOCKER_USERNAME -p
