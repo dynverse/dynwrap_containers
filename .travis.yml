@@ -10,7 +10,7 @@ before_install:
 script:
 - export REPO=dynverse/dynwrap$NAME
 - source version
-- sudo docker build --build-arg GITHUB_PAT=${GITHUB_PAT} -t $REPO:v$VERSION .
+- sudo docker build --build-arg GITHUB_PAT=${GITHUB_PAT} -t $REPO:v$VERSION $NAME
 - docker tag $REPO:v$VERSION $REPO:latest
 after_success:
 - if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ; docker push $REPO ; fi
