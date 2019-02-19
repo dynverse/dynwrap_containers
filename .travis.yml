@@ -8,7 +8,7 @@ before_install:
 - sudo apt update -y
 - sudo apt install --only-upgrade docker-ce -y
 script:
-- export REPO=dynverse/dynwrap$NAME
+- export REPO=dynverse/$NAME
 - source version
 - sudo docker build --build-arg GITHUB_PAT=${GITHUB_PAT} -t $REPO:v$VERSION $NAME
 - docker tag $REPO:v$VERSION $REPO:latest
