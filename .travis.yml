@@ -8,9 +8,18 @@ before_install:
 - sudo apt update -y
 - sudo apt install --only-upgrade docker-ce -y
 script:
-- source docker_info
-- sudo docker build --build-arg GITHUB_PAT=${GITHUB_PAT} -t $TRAVIS_REPO_SLUG:v$VERSION .
-- docker tag $TRAVIS_REPO_SLUG:v$VERSION $TRAVIS_REPO_SLUG:latest
+- export REPO=dynverse/dynwrap$NAME
+- source version
+- sudo docker build --build-arg GITHUB_PAT=${GITHUB_PAT} -t $REPO:v$VERSION .
+- docker tag $REPO:v$VERSION $REPO:latest
 after_success:
-- if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker login -u $DOCKER_USERNAME -p
-  $DOCKER_PASSWORD ; docker push $TRAVIS_REPO_SLUG ; fi
+- if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ; docker push $REPO ; fi
+jobs:
+  include:
+    - stage: r
+      env:
+      - NAME=dynwrapr
+    - stage: py
+      env:
+      - NAME=dynwrappy2
+      - NAME=dynwrappy3
