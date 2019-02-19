@@ -22,4 +22,6 @@ jobs:
     - stage: py
       env:
       - NAME=dynwrappy2
+    - stage: py
+      env:
       - NAME=dynwrappy3
