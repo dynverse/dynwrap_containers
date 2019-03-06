@@ -8,6 +8,7 @@ ARG GITHUB_PAT
 # https://github.com/docker-library/python/blob/master/3.7/stretch/Dockerfile
 # removed gpg check
 # added libffi-dev dependency
+# added libbz2-dev dependency
 
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
@@ -21,14 +22,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		tk-dev \
 		uuid-dev \
                 libffi-dev \
+		libbz2-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV GPG_KEY 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
 ENV PYTHON_VERSION 3.7.2
 
-RUN set -ex \
-	\
-	&& wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
+RUN wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
 	&& mkdir -p /usr/src/python \
 	&& tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz \
 	&& rm python.tar.xz \
@@ -45,13 +45,6 @@ RUN set -ex \
 	&& make -j "$(nproc)" \
 	&& make install \
 	&& ldconfig \
-	\
-	&& find /usr/local -depth \
-		\( \
-			\( -type d -a \( -name test -o -name tests \) \) \
-			-o \
-			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
-		\) -exec rm -rf '{}' + \
 	&& rm -rf /usr/src/python \
 	\
 	&& python3 --version
@@ -66,9 +59,7 @@ RUN cd /usr/local/bin \
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 19.0.2
 
-RUN set -ex; \
-	\
-	wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
+RUN wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
 	\
 	python get-pip.py \
 		--disable-pip-version-check \
@@ -76,17 +67,16 @@ RUN set -ex; \
 		"pip==$PYTHON_PIP_VERSION" \
 	; \
 	pip --version; \
-	\
-	find /usr/local -depth \
-		\( \
-			\( -type d -a \( -name test -o -name tests \) \) \
-			-o \
-			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
-		\) -exec rm -rf '{}' +; \
 	rm -f get-pip.py
 
 # install common python packages
 RUN pip install scipy numpy pandas
 RUN pip install matplotlib sklearn h5py tables Cython
+
+# install dynclipy
+RUN pip install git+https://github.com/dynverse/dynclipy.git@85ab53e4f0e8e253fe742121aad4af1ec0326a37
+
+# for rpy2, update the LD_LIBRARY_PATH variable to point to the correct libR.so
+ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib/R/lib"
 
 CMD ["python3"]
