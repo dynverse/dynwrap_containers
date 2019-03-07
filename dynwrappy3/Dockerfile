@@ -74,7 +74,7 @@ RUN pip install scipy numpy pandas
 RUN pip install matplotlib sklearn h5py tables Cython
 
 # install dynclipy
-RUN pip install git+https://github.com/dynverse/dynclipy.git@85ab53e4f0e8e253fe742121aad4af1ec0326a37
+RUN pip install git+https://github.com/dynverse/dynclipy.git@60825b804c1c2dec28837ad0243bae69c457ef3e
 
 # for rpy2, update the LD_LIBRARY_PATH variable to point to the correct libR.so
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib/R/lib"
