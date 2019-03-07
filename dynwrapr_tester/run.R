@@ -17,15 +17,16 @@ start_id <- task$priors$start_id
 ###        INFER TRAJECTORY       ###
 #####################################
 # do PCA
-pca <- prcomp(expression)
+dimred <- prcomp(expression)$x
 
 # extract the component and use it as pseudotimes
-pseudotime <- pca$x[, params$component]
+pseudotime <- dimred[, params$component]
+pseudotime <- (pseudotime - min(pseudotime)) / (max(pseudotime) - min(pseudotime))
 
 # flip pseudotimes using start_id
 if (!is.null(start_id)) {
   if (mean(pseudotime[start_id]) > 0.5) {
-    pseudotime <- 1-pseudotime
+    pseudotime <- 1 - pseudotime
   }
 }
 
@@ -39,6 +40,9 @@ output <-
   add_cyclic_trajectory(
     pseudotime = pseudotime,
     do_scale_minmax = FALSE
+  ) %>% 
+  add_dimred(
+    dimred = dimred
   )
 
-dyncli::write_h5(output, task$output)
+dyncli::write_output(output, task$output)

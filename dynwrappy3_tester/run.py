@@ -30,10 +30,11 @@ checkpoints["method_afterpreproc"] = time.time()
 #####################################
 # do PCA
 pca = sklearn.decomposition.PCA()
-x = pca.fit_transform(expression)
+dimred = pca.fit_transform(expression)
 
 # extract the component and use it as pseudotimes
-pseudotime = x[:, params["component"]]
+pseudotime = dimred[:, params["component"]]
+pseudotime = (pseudotime - pseudotime.min()) / (pseudotime.max() - pseudotime.min())
 
 # flip pseudotimes using start_id
 if start_id is not None:
@@ -47,8 +48,8 @@ checkpoints["method_aftermethod"] = time.time()
 ###     SAVE OUTPUT TRAJECTORY    ###
 #####################################
 output = dynclipy.wrap_data(cell_ids = cell_ids)
-output.add_linear_trajectory(pseudotime = pd.Series(pseudotime, name = expression.index))
-output.add_dimred(x)
+output.add_linear_trajectory(pseudotime = pd.Series(pseudotime, name = expression.index), do_scale_minmax = False)
+output.add_dimred(dimred)
 output.add_timings(checkpoints)
 
 # save
