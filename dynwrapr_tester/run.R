@@ -1,0 +1,44 @@
+#!/usr/local/bin/Rscript
+
+library(dplyr, warn.conflicts = FALSE)
+library(readr, warn.conflicts = FALSE)
+library(dynwrap, warn.conflicts = FALSE)
+library(dyncli, warn.conflicts = FALSE)
+
+#####################################
+###           LOAD DATA           ###
+#####################################
+task <- dyncli::main()
+params <- task$params
+expression <- task$expression
+start_id <- task$priors$start_id
+
+#####################################
+###        INFER TRAJECTORY       ###
+#####################################
+# do PCA
+pca <- prcomp(expression)
+
+# extract the component and use it as pseudotimes
+pseudotime <- pca$x[, params$component]
+
+# flip pseudotimes using start_id
+if (!is.null(start_id)) {
+  if (mean(pseudotime[start_id]) > 0.5) {
+    pseudotime <- 1-pseudotime
+  }
+}
+
+#####################################
+###     SAVE OUTPUT TRAJECTORY    ###
+#####################################
+output <-
+  wrap_data(
+    cell_ids = rownames(expression)
+  ) %>%
+  add_cyclic_trajectory(
+    pseudotime = pseudotime,
+    do_scale_minmax = FALSE
+  )
+
+dyncli::write_h5(output, task$output)
