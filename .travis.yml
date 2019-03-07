@@ -44,11 +44,8 @@ jobs:
     after_success:
     - echo Do not push docker since this is a cache warmup
   - stage: r
-    env:
-    - NAME=dynwrapr
+    before_script:
+    - export NAME=dynwrapr
   - stage: py
-    env:
-    - NAME=dynwrappy2
-  - stage: py
-    env:
-    - NAME=dynwrappy3
+    before_script:
+    - export NAME=dynwrappy3
