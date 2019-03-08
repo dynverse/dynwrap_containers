@@ -13,8 +13,10 @@ RUN echo 'utils::setRepositories(ind=1:4)' > ~/.Rprofile
 RUN R -e 'install.packages(c("devtools", "remotes"))' && \
 	R -e 'install.packages(c("Rcpp", "RcppEigen", "RSpectra", "RcppArmadillo"), repos = "https://cloud.r-project.org/", verbose = TRUE, quiet = TRUE)' && \
 	R -e 'remotes::install_bioc("SingleCellExperiment")' && \
-	R -e 'remotes::install_github(c("dynverse/dynutils@devel", "dynverse/dyndimred", "dynverse/dynwrap@singularity3", "dynverse/dyncli"), dependencies = TRUE)' && \
-        rm -rf /tmp/* # clean up temp files
+	R -e 'remotes::install_github("dynverse/dyndimred"", dependencies = TRUE) && \
+	R -e 'remotes::install_github(c("dynverse/dynwrap@singularity3", "dynverse/dyncli"), dependencies = TRUE)' && \
+        R -e 'remotes::install_github("dynverse/dynutils@devel", dependencies = TRUE) && \
+	rm -rf /tmp/* # clean up temp files
 
 # set several env variables so that
 # rstan and similar packages will not misbehave
