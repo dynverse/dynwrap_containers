@@ -48,4 +48,4 @@ jobs:
     - export NAME=dynwrapr
   - stage: py
     before_script:
-    - export NAME=dynwrappy3
+    - export NAME=dynwrappy
