@@ -49,3 +49,6 @@ jobs:
   - stage: py
     before_script:
     - export NAME=dynwrappy
+  - stage: py
+    before_script:
+    - export NAME=dynwrappy36
