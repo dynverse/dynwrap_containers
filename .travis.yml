@@ -10,12 +10,12 @@ cache:
 services:
 - docker
 before_install:
-- openssl aes-256-cbc -K $encrypted_95b2b80a4aa4_key -iv $encrypted_95b2b80a4aa4_iv
+- openssl aes-256-cbc -K $encrypted_18ebcb932cdb_key -iv $encrypted_18ebcb932cdb_iv
   -in credentials.enc -out credentials -d
 - source credentials
 - source <(curl -sSL https://raw.githubusercontent.com/dynverse/travis_scripts/master/helper.sh)
 install:
-- set -e 
+- set -e
 - update_docker
 - install_hdf5
 - install_cran remotes
@@ -26,16 +26,16 @@ script:
 - cd $NAME
 - build_docker
 - cd ..
-- # export REPO=dynverse/${NAME}_tester
-- # cd ${NAME}_tester
-- # build_docker
-- # test_docker
-- # cd ..
+- 
+- 
+- 
+- 
+- 
 after_success:
 - export REPO=dynverse/$NAME
 - push_docker
-- # export REPO=dynverse/${NAME}_tester
-- # push_docker
+- 
+- 
 jobs:
   include:
   - stage: cache
