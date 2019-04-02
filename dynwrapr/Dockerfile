@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends libhdf5-dev lib
 	rm -rf /var/lib/apt/lists/*
 
 # install common packages and dynwrap/dyncli
-RUN echo 'utils::setRepositories(ind=1:4)' > ~/.Rprofile
+RUN echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"));utils::setRepositories(ind=1:4)' > ~/.Rprofile
 RUN R -e 'install.packages(c("devtools", "remotes"))' && \
 	R -e 'install.packages(c("Rcpp", "RcppEigen", "RSpectra", "RcppArmadillo"), repos = "https://cloud.r-project.org/", verbose = TRUE, quiet = TRUE)' && \
 	R -e 'remotes::install_bioc("SingleCellExperiment")' && \
