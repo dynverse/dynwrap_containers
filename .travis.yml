@@ -19,7 +19,7 @@ install:
 - update_docker
 - install_hdf5
 - install_cran remotes
-- install_github_withdeps dynverse/dynutils dynverse/dynwrap@devel dynverse/dyntoy
+- install_github_withdeps dynverse/dynutils@devel dynverse/dynwrap@devel dynverse/dyntoy@devel
 script:
 - export REPO=dynverse/$NAME
 - source version
