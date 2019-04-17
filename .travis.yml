@@ -19,6 +19,7 @@ install:
 - update_docker
 - install_hdf5
 - install_cran remotes
+- install_dynverse
 - install_github_withdeps dynverse/dynutils@devel dynverse/dynwrap@devel dynverse/dyntoy@devel
 script:
 - export REPO=dynverse/$NAME
@@ -26,16 +27,9 @@ script:
 - cd $NAME
 - build_docker
 - cd ..
-- 
-- 
-- 
-- 
-- 
 after_success:
 - export REPO=dynverse/$NAME
 - push_docker
-- 
-- 
 jobs:
   include:
   - stage: cache
