@@ -19,8 +19,8 @@ ENV OMP_NUM_THREADS=1
 RUN echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"));utils::setRepositories(ind=1:4)' >> /usr/local/lib/R/etc/Rprofile.site
 
 # install common packages and dynwrap/dyncli
-RUN R -e 'install.packages(c("devtools", "remotes"))' && \
-	R -e 'install.packages(c("Rcpp", "RcppEigen", "RSpectra", "RcppArmadillo"), repos = "https://cloud.r-project.org/", verbose = TRUE, quiet = TRUE)' && \
+RUN R -e 'install.packages("tidyverse")' && \
+	R -e 'install.packages(c("Rcpp", "RcppEigen", "RSpectra", "RcppArmadillo"), verbose = TRUE, quiet = TRUE)' && \
 	R -e 'remotes::install_bioc("SingleCellExperiment")' && \
 	rm -rf /tmp/* # clean up temp files
 
