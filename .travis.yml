@@ -19,7 +19,6 @@ install:
 - update_docker
 - install_hdf5
 - install_cran remotes
-- install_dynverse
 - install_github_withdeps dynverse/dynutils@devel dynverse/dynwrap@devel dynverse/dyntoy@devel
 script:
 - export REPO=dynverse/$NAME
@@ -33,10 +32,21 @@ after_success:
 jobs:
   include:
   - stage: cache
+    install:
+    - set -e
+    - install_hdf5
+    - install_dynverse
+    - install_cran remotes
+    - install_github_withdeps dynverse/dynutils@devel dynverse/dynwrap@devel dynverse/dyntoy@devel
     script:
-    - echo Do not build or test docker since this is a cache warmup
+    - echo Cache warmup
     after_success:
-    - echo Do not push docker since this is a cache warmup
+    - echo Cache warmup
+  - stage: base
+    before_script:
+    - export NAME=dynbase
+    after_success:
+    - echo Do not push intermediary container
   - stage: r
     before_script:
     - export NAME=dynwrapr
