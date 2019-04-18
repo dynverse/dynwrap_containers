@@ -45,8 +45,6 @@ jobs:
   - stage: base
     before_script:
     - export NAME=dynbase
-    after_success:
-    - echo Do not push intermediary container
   - stage: r
     before_script:
     - export NAME=dynwrapr
