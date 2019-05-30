@@ -1,4 +1,4 @@
-FROM rocker/tidyverse:3.5
+FROM rocker/tidyverse:3.6.0
 
 MAINTAINER Robrecht Cannoodt "rcannood@gmail.com"
 
