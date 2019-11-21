@@ -21,7 +21,8 @@ RUN echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"));utils::setRepos
 # install common packages and dynwrap/dyncli
 RUN R -e 'install.packages("tidyverse")' && \
 	R -e 'install.packages(c("Rcpp", "RcppEigen", "RSpectra", "RcppArmadillo"), verbose = TRUE, quiet = TRUE)' && \
-	R -e 'remotes::install_bioc(c("S4Vectors", "SingleCellExperiment"))' && \
+    R -e 'install.packages("BiocManager");BiocManager::install()' && \
+	R -e 'remotes::install_bioc(c("BiocGenerics", "S4Vectors", "SingleCellExperiment"))' && \
 	rm -rf /tmp/* # clean up temp files
 
 ENTRYPOINT ["/code/run.sh"]
