@@ -14,7 +14,7 @@ RUN echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"));utils::setRepos
 # install common packages and dynwrap/dyncli
 RUN R -e 'install.packages(c("devtools", "remotes"))' && \
 	R -e 'install.packages(c("Rcpp", "RcppEigen", "RSpectra", "RcppArmadillo"), repos = "https://cloud.r-project.org/", verbose = TRUE, quiet = TRUE)' && \
-	R -e 'remotes::install_bioc("SingleCellExperiment")' && \
+	R -e 'remotes::install_bioc("S4Vectors", "SingleCellExperiment")' && \
 	R -e 'remotes::install_github("dynverse/dyntoy")' && \
 	R -e 'remotes::install_github(c("dynverse/dynwrap", "dynverse/dyncli", "dynverse/dyndimred"), dependencies = TRUE)' && \
 	rm -rf /tmp/* # clean up temp files
