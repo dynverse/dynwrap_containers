@@ -26,23 +26,25 @@ script:
 - cd $NAME
 - build_docker
 - cd ..
-- 
-- 
-- 
-- 
-- 
 after_success:
 - export REPO=dynverse/$NAME
 - push_docker
-- 
-- 
 jobs:
   include:
   - stage: cache
+    install:
+    - set -e
+    - install_hdf5
+    - install_dynverse
+    - install_cran remotes
+    - install_github_withdeps dynverse/dynutils@devel dynverse/dynwrap@devel dynverse/dyntoy@devel
     script:
-    - echo Do not build or test docker since this is a cache warmup
+    - echo Cache warmup
     after_success:
-    - echo Do not push docker since this is a cache warmup
+    - echo Cache warmup
+  - stage: base
+    before_script:
+    - export NAME=dynbase
   - stage: r
     before_script:
     - export NAME=dynwrapr
