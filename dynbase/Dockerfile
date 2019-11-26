@@ -1,4 +1,4 @@
-FROM rocker/tidyverse:3.6.0
+FROM rocker/tidyverse:3.6.1
 
 MAINTAINER Robrecht Cannoodt "rcannood@gmail.com"
 
@@ -22,6 +22,7 @@ RUN echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"));utils::setRepos
 RUN R -e 'install.packages("tidyverse")' && \
 	R -e 'install.packages(c("Rcpp", "RcppEigen", "RSpectra", "RcppArmadillo"), verbose = TRUE, quiet = TRUE)' && \
     R -e 'install.packages("BiocManager");BiocManager::install()' && \
+	R -e 'BiocManager::valid()' && \
 	R -e 'remotes::install_bioc(c("BiocGenerics", "S4Vectors", "SummarizedExperiment", "SingleCellExperiment"))' && \
 	rm -rf /tmp/* # clean up temp files
 
