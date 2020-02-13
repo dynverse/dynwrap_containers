@@ -23,7 +23,7 @@ RUN R -e 'install.packages("tidyverse")' && \
 	R -e 'install.packages(c("Rcpp", "RcppEigen", "RSpectra", "RcppArmadillo"), verbose = TRUE, quiet = TRUE)' && \
     R -e 'install.packages("BiocManager");BiocManager::install()' && \
 	R -e 'BiocManager::valid()' && \
-	R -e 'remotes::install_bioc(c("BiocGenerics", "S4Vectors", "SummarizedExperiment", "SingleCellExperiment"))' && \
+	R -e 'remotes::install_bioc(c("BiocGenerics", "SummarizedExperiment", "SingleCellExperiment"))' && \
 	rm -rf /tmp/* # clean up temp files
 
 ENTRYPOINT ["/code/run.sh"]
