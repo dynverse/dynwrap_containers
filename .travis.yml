@@ -37,7 +37,7 @@ jobs:
     - install_hdf5
     - install_dynverse
     - install_cran remotes
-    - install_github_withdeps dynverse/dynutils@master dynverse/dynwrap@master dynverse/dyntoy@master
+    - install_github_withdeps dynverse/dynutils@master dynverse/dynwrap@master dynverse/dyntoy@master dynverse/dyncli@master
     script:
     - echo Cache warmup
     after_success:
