@@ -1,6 +1,5 @@
 language: r
 dist: trusty
-sudo: true
 os:
 - linux
 cache:
@@ -16,41 +15,48 @@ before_install:
 - source <(curl -sSL https://raw.githubusercontent.com/dynverse/travis_scripts/master/helper.sh)
 install:
 - set -e
-- update_docker
+- if [[ "$TRAVIS_BUILD_STAGE_NAME" != "Cache" ]]; then update_docker; fi
 - install_hdf5
 - install_cran remotes
-- install_github_withdeps dynverse/dynutils@devel dynverse/dynwrap@devel dynverse/dyntoy@devel
+- install_github_withdeps dynverse/dynutils@master dynverse/dynwrap@master dynverse/dyntoy@master
 script:
 - export REPO=dynverse/$NAME
 - source version
 - cd $NAME
 - build_docker
+- if [[ "$TRAVIS_BUILD_STAGE_NAME" == "Test" ]]; then test_docker; fi
 - cd ..
 after_success:
 - export REPO=dynverse/$NAME
 - push_docker
 jobs:
   include:
-  - stage: cache
+  - stage: Cache
     install:
     - set -e
     - install_hdf5
     - install_dynverse
     - install_cran remotes
-    - install_github_withdeps dynverse/dynutils@devel dynverse/dynwrap@devel dynverse/dyntoy@devel
+    - install_github_withdeps dynverse/dynutils@master dynverse/dynwrap@master dynverse/dyntoy@master
     script:
     - echo Cache warmup
     after_success:
     - echo Cache warmup
-  - stage: base
+  - stage: Base
     before_script:
     - export NAME=dynbase
-  - stage: r
+  - stage: R
     before_script:
     - export NAME=dynwrapr
-  - stage: py
+  - stage: Py
     before_script:
     - export NAME=dynwrappy
-  - stage: py
+  - stage: Py
     before_script:
     - export NAME=dynwrappy36
+  - stage: Test
+    before_script:
+    - export NAME=dynwrapr_tester
+  - stage: Test
+    before_script:
+    - export NAME=dynwrappy_tester
