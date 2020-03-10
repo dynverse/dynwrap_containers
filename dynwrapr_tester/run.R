@@ -9,7 +9,7 @@ library(dyncli, warn.conflicts = FALSE)
 ###           LOAD DATA           ###
 #####################################
 task <- dyncli::main()
-params <- task$params
+params <- task$parameters
 expression <- task$expression
 start_id <- task$priors$start_id
 

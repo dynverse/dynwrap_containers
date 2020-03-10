@@ -14,7 +14,7 @@ checkpoints = {}
 task = dynclipy.main()
 
 expression = task["expression"]
-params = task["params"]
+params = task["parameters"]
 cell_ids = expression.index
 
 if "start_id" in task["priors"]:
