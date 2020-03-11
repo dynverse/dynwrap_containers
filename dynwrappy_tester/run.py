@@ -48,12 +48,11 @@ checkpoints["method_aftermethod"] = time.time()
 ###     SAVE OUTPUT TRAJECTORY    ###
 #####################################
 output = dynclipy.wrap_data(cell_ids = cell_ids)
-output.add_linear_trajectory(pseudotime = pd.Series(pseudotime, name = expression.index), do_scale_minmax = False)
+output.add_linear_trajectory(pseudotime = pd.Series(pseudotime, index = expression.index), do_scale_minmax = False)
+dimred = pd.DataFrame(dimred)
+dimred["cell_id"] = expression.index
 output.add_dimred(dimred)
 output.add_timings(checkpoints)
 
 # save
-dynclipy.write_output(
-  output,
-  task["output"]
-)
+output.write_output(task["output"])
