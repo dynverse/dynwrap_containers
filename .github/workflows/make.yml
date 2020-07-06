@@ -45,7 +45,7 @@ jobs:
           cat src/Dockerfile.template >> $out
           TAG="v$VERSION"
           docker build --build-arg GITHUB_PAT=${{ secrets.PAT }} -t "$REPO:$TAG" -f $out .
-          if [ "master" == $GITHUB_REF ]] ; then
+          if [ "refs/heads/master" == $GITHUB_REF ]] ; then
             docker tag "$REPO:$TAG" "$REPO:latest"
           fi
 
