@@ -1,0 +1,57 @@
+FROM dataintuitive/randpy:latest
+
+LABEL org.label-schema.license="MIT" \
+      org.label-schema.vcs-url="https://github.com/dynverse/dynwrap_containers" \
+      org.label-schema.vendor="dynwrap in a container" \
+      maintainer="Robrecht Cannoodt <rcannood@gmail.com>"
+
+ARG GITHUB_PAT
+
+# install hdf5 and ssh
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends \
+    libhdf5-dev \
+    libssh-dev \
+    git && \
+  rm -rf /var/lib/apt/lists/*
+
+# set several env variables so that
+# rstan and similar packages will not misbehave
+ENV OPENBLAS_NUM_THREADS=1
+ENV NUMEXPR_NUM_THREADS=1
+ENV MKL_NUM_THREADS=1
+ENV OMP_NUM_THREADS=1
+
+# set default repo to cran.rstudio.com, not MRAN
+RUN echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"));utils::setRepositories(ind=1:4)' >> /usr/local/lib/R/etc/Rprofile.site
+
+# install common packages and dynwrap/dyncli
+# RUN install2.r --error \
+#     tidyverse \
+#     Rcpp \
+#     RcppEigen \
+#     RSpectra \
+#     RcppArmadillo \
+#     BiocManager
+# RUN installBioc.r --error \
+#     BiocGenerics \
+#     S4Vectors \
+#     SummarizedExperiment \
+#     SingleCellExperiment
+
+# install dyncli and others
+RUN installGithub.r \
+    dynverse/dyntoy \
+    dynverse/dynwrap \
+    dynverse/dyncli \
+    dynverse/dyndimred
+
+# install dynclipy
+RUN pip install git+https://github.com/dynverse/dynclipy.git
+
+# for rpy2, update the LD_LIBRARY_PATH variable to point to the correct libR.so
+ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib/R/lib"
+
+ENTRYPOINT ["/code/run.sh"]
+
+CMD ["-h"]

@@ -1,0 +1,55 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: "0 0 * * 1"
+
+name: make
+
+jobs:
+  build_containers:
+    runs-on: 'ubuntu-latest'
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    name: randpy_r${{ matrix.config.r }}_py${{ matrix.config.python }}
+
+    env:
+      R_LATEST: 4.0
+      PY_LATEST: 3.8
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {randpy: 'r3.6_py3.6'}
+          - {randpy: 'r3.6_py3.7'}
+          - {randpy: 'r3.6_py3.8'}
+          - {randpy: 'r4.0_py3.6'}
+          - {randpy: 'r4.0_py3.7'}
+          - {randpy: 'r4.0_py3.8'}
+          - {randpy: 'latest'}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: build
+        run: |
+          source version
+          out=Dockerfile
+          echo "FROM dataintuitive/randpy:${{ matrix.config.randpy }}" > $out
+          echo >> $out
+          cat src/Dockerfile.template >> $out
+          REPO="dynverse/dynwrap_${{ matrix.config.randpy }}"
+          TAG="v$VERSION"
+          docker build --build-arg GITHUB_PAT=${{ secrets.PAT }} -t "$REPO:$TAG" -f $out .
+          if [ "master" == $GITHUB_REF ]] ; then
+            docker tag "$REPO:$TAG" "$REPO:latest"
+          fi
+
+      - name: push
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push $REPO
