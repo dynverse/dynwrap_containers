@@ -25,9 +25,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
+          - {randpy: 'r3.6_py2.7'}
           - {randpy: 'r3.6_py3.6'}
           - {randpy: 'r3.6_py3.7'}
           - {randpy: 'r3.6_py3.8'}
+          - {randpy: 'r4.0_py2.7'}
           - {randpy: 'r4.0_py3.6'}
           - {randpy: 'r4.0_py3.7'}
           - {randpy: 'r4.0_py3.8'}
