@@ -39,17 +39,16 @@ jobs:
       - name: Build
         run: |
           source version
+          TAG="v$VERSION"
           echo "Randpy: ${{ matrix.config.randpy }}"
           echo "Branch: ${GITHUB_REF#refs/heads/}"
           echo "Version: $VERSION"
-          out=Dockerfile
-          echo "FROM dataintuitive/randpy:${{ matrix.config.randpy }}" > $out
-          echo >> $out
-          cat src/Dockerfile.template >> $out
-          TAG="v$VERSION"
-          docker build --build-arg GITHUB_PAT=${{ secrets.PAT }} -t dynwrap_build -f $out .
-	  docker tag dynwrap_build "$REPO:$TAG"
-          if [ "master" == ${GITHUB_REF#refs/heads/} ]] ; then
+          echo "FROM dataintuitive/randpy:${{ matrix.config.randpy }}" > Dockerfile
+          echo >> Dockerfile
+          cat src/Dockerfile.template >> Dockerfile
+          docker build --build-arg GITHUB_PAT=${{ secrets.PAT }} -t dynwrap_build -f Dockerfile .
+          docker tag dynwrap_build "$REPO:$TAG"
+          if [ ${GITHUB_REF#refs/heads/} == "master" ]] ; then
             docker tag dynwrap_build "$REPO:latest"
           fi
 
