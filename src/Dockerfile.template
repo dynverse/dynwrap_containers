@@ -21,7 +21,7 @@ ENV MKL_NUM_THREADS=1
 ENV OMP_NUM_THREADS=1
 
 # set default repo to cran.rstudio.com, not MRAN
-RUN echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"));utils::setRepositories(ind=1:4)' >> /usr/local/lib/R/etc/Rprofile.site
+RUN echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"))' >> /usr/local/lib/R/etc/Rprofile.site
 
 # install common packages and dynwrap/dyncli
 # RUN install2.r --error \
@@ -44,11 +44,12 @@ RUN installGithub.r --deps TRUE \
     dynverse/dyncli \
     dynverse/dyndimred
 
-# install dynclipy
-RUN pip install git+https://github.com/dynverse/dynclipy.git
-
 # for rpy2, update the LD_LIBRARY_PATH variable to point to the correct libR.so
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib/R/lib"
+
+# install dynclipy
+RUN pip install git+https://github.com/dynverse/dynclipy.git && \
+  pip install sklearn
 
 COPY tests /tests/
 
