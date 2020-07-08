@@ -50,6 +50,8 @@ RUN pip install git+https://github.com/dynverse/dynclipy.git
 # for rpy2, update the LD_LIBRARY_PATH variable to point to the correct libR.so
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib/R/lib"
 
+COPY tests /tests/
+
 ENTRYPOINT ["/code/run.sh"]
 
 CMD ["-h"]

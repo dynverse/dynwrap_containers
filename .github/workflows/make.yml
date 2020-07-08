@@ -25,11 +25,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {randpy: 'r3.6_py2.7'}
           - {randpy: 'r3.6_py3.6'}
           - {randpy: 'r3.6_py3.7'}
           - {randpy: 'r3.6_py3.8'}
-          - {randpy: 'r4.0_py2.7'}
           - {randpy: 'r4.0_py3.6'}
           - {randpy: 'r4.0_py3.7'}
           - {randpy: 'r4.0_py3.8'}
@@ -41,15 +39,28 @@ jobs:
       - name: Build
         run: |
           source version
+          echo "Randpy: ${{ matrix.config.randpy }}"
+          echo "Branch: ${GITHUB_REF#refs/heads/}"
+          echo "Version: $VERSION"
           out=Dockerfile
           echo "FROM dataintuitive/randpy:${{ matrix.config.randpy }}" > $out
           echo >> $out
           cat src/Dockerfile.template >> $out
           TAG="v$VERSION"
-          docker build --build-arg GITHUB_PAT=${{ secrets.PAT }} -t "$REPO:$TAG" -f $out .
-          if [ "refs/heads/master" == $GITHUB_REF ]] ; then
-            docker tag "$REPO:$TAG" "$REPO:latest"
+          docker build --build-arg GITHUB_PAT=${{ secrets.PAT }} -t dynwrap_build -f $out .
+	  docker tag dynwrap_build "$REPO:$TAG"
+          if [ "master" == ${GITHUB_REF#refs/heads/} ]] ; then
+            docker tag dynwrap_build "$REPO:latest"
           fi
+
+      - name: Test
+        run: |
+          mkdir test_out
+          docker run --entrypoint /tests/example.sh -v `pwd`/test_out:/mnt dynwrap_build /mnt/example.h5
+          docker run --entrypoint /tests/r/run.R -v `pwd`/test_out:/mnt dynwrap_build --dataset /mnt/example.h5 --output /mnt/output_r.h5 --verbosity 3
+          docker run --entrypoint Rscript -v `pwd`/test_out:/mnt dynwrap_build -e 'traj <- dynutils::read_h5("/mnt/output_r.h5"); if (!dynwrap::is_wrapper_with_trajectory(traj)) stop("No trajectory found!")'
+          docker run --entrypoint /tests/python/run.py -v `pwd`/test_out:/mnt dynwrap_build --dataset /mnt/example.h5 --output /mnt/output_py.h5 --verbosity 3
+          docker run --entrypoint Rscript -v `pwd`/test_out:/mnt dynwrap_build -e 'traj <- dynutils::read_h5("/mnt/output_r.h5"); if (!dynwrap::is_wrapper_with_trajectory(traj)) stop("No trajectory found!")'
 
       - name: Push
         run: |

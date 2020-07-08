@@ -1,0 +1,24 @@
+method:
+  id: dynwrappy_tester
+  name: 'Dynwrappy tester'
+  source: control
+  platform: Python
+
+wrapper:
+  type: linear
+  trajectory_types: linear_trajectory
+  input_required: expression
+  input_optional: start_id
+
+container:
+  docker: dynverse/dynwrappy_tester
+  url: https://github.com/dynverse/dynwrap_containers/tree/master/dynwrappy_tester
+
+parameters:
+- id: component
+  type: integer
+  default: 1
+  distribution:
+    type: uniform
+    lower: 1
+    upper: 10
