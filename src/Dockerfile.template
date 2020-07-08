@@ -22,7 +22,7 @@ ENV OMP_NUM_THREADS=1
 
 # set default repo to cran.rstudio.com, not MRAN
 RUN echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"))' >> /usr/local/lib/R/etc/Rprofile.site && \
-  echo 'setRepositories(ind = 1:4)' >> /usr/local/lib/R/etc/Rprofile.site
+  echo 'utils::setRepositories(ind = 1:4)' >> /usr/local/lib/R/etc/Rprofile.site
 
 # install common packages and dynwrap/dyncli
 # RUN install2.r --error \
