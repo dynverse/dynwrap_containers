@@ -17,8 +17,6 @@ jobs:
     name: build dynverse/dynwrap_${{ matrix.config.randpy }}
 
     env:
-      R_LATEST: 4.0
-      PY_LATEST: 3.8
       REPO: dynverse/dynwrap_${{ matrix.config.randpy }}
 
     strategy:
@@ -48,7 +46,7 @@ jobs:
           cat src/Dockerfile.template >> Dockerfile
           docker build --build-arg GITHUB_PAT=${{ secrets.PAT }} -t dynwrap_build -f Dockerfile .
           docker tag dynwrap_build "$REPO:$TAG"
-          if [ ${GITHUB_REF#refs/heads/} == "master" ]] ; then
+          if [[ ${GITHUB_REF#refs/heads/} == "master" ]] ; then
             docker tag dynwrap_build "$REPO:latest"
           fi
 
